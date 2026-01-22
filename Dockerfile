@@ -1,22 +1,28 @@
 FROM php:8.2-apache
 
+# Instalar extensiones necesarias para Yii + PostgreSQL
 RUN apt-get update && apt-get install -y \
     libpq-dev \
-    zip \
     unzip \
+    git \
     && docker-php-ext-install pdo pdo_pgsql
 
+# Habilitar mod_rewrite
 RUN a2enmod rewrite
 
-WORKDIR /var/www/html
+# Configurar Apache para Yii (web como root)
+ENV APACHE_DOCUMENT_ROOT=/var/www/html/web
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
+RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
-COPY . .
+# Copiar proyecto
+COPY . /var/www/html
 
-RUN curl -sS https://getcomposer.org/installer | php \
-    && mv composer.phar /usr/local/bin/composer
+# Permisos
+RUN chown -R www-data:www-data /var/www/html/runtime /var/www/html/web/assets
 
-RUN composer install --no-dev --optimize-autoloader
-
-RUN chown -R www-data:www-data /var/www/html
-
-EXPOSE 80
+# Instalar dependencias con Composer
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+    && php composer-setup.php \
+    && php composer.phar install --no-dev --optimize-autoloader \
+    && rm composer.phar composer-setup.php
