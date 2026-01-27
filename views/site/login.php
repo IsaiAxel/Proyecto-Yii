@@ -1,55 +1,77 @@
 <?php
 
-/** @var yii\web\View $this */
-/** @var yii\bootstrap5\ActiveForm $form */
-
-/** @var app\models\LoginForm $model */
-
+use yii\helpers\Html;
 use yii\bootstrap5\ActiveForm;
-use yii\bootstrap5\Html;
+use himiklab\yii2\recaptcha\ReCaptcha2;
 
-$this->title = 'Login';
+$this->title = 'Iniciar sesión';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="site-login">
-    <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>Please fill out the following fields to login:</p>
+<style>
+    body {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+    }
+    .login-card {
+        border-radius: 20px;
+        background: #ffffff;
+        padding: 30px;
+    }
+    .login-title {
+        font-weight: 600;
+        color: #4a4a4a;
+    }
+    .section-title {
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #888;
+        margin-top: 15px;
+    }
+</style>
 
-    <div class="row">
-        <div class="col-lg-5">
+<div class="container d-flex align-items-center justify-content-center" style="min-height: 90vh;">
+    <div class="col-md-6 col-lg-5">
 
-            <?php $form = ActiveForm::begin([
-                'id' => 'login-form',
-                'fieldConfig' => [
-                    'template' => "{label}\n{input}\n{error}",
-                    'labelOptions' => ['class' => 'col-lg-1 col-form-label mr-lg-3'],
-                    'inputOptions' => ['class' => 'col-lg-3 form-control'],
-                    'errorOptions' => ['class' => 'col-lg-7 invalid-feedback'],
-                ],
-            ]); ?>
+        <div class="login-card shadow-lg">
+            <div class="text-center mb-4">
+                <h2 class="login-title">🔐 Iniciar sesión</h2>
+                <p class="text-muted mb-0">Accede con tus credenciales</p>
+            </div>
 
-            <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
+            <?php $form = ActiveForm::begin(); ?>
 
-            <?= $form->field($model, 'password')->passwordInput() ?>
+            <div class="section-title">Credenciales</div>
 
-            <?= $form->field($model, 'rememberMe')->checkbox([
-                'template' => "<div class=\"custom-control custom-checkbox\">{input} {label}</div>\n<div class=\"col-lg-8\">{error}</div>",
-            ]) ?>
+            <?= $form->field($model, 'username')
+                ->textInput(['placeholder' => 'Usuario']) ?>
 
-            <div class="form-group">
-                <div>
-                    <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
-                </div>
+            <?= $form->field($model, 'password')
+                ->passwordInput(['placeholder' => 'Contraseña']) ?>
+
+            <?= $form->field($model, 'rememberMe')->checkbox() ?>
+
+            <div class="mt-3">
+                <?= $form->field($model, 'reCaptcha')
+                    ->widget(ReCaptcha2::class)
+                    ->label(false) ?>
+            </div>
+
+            <div class="d-grid mt-4 gap-2">
+                <?= Html::submitButton(
+                    'Entrar',
+                    ['class' => 'btn btn-primary btn-lg rounded-pill']
+                ) ?>
+
+                <?= Html::a(
+                    'Crear una cuenta',
+                    ['site/register'],
+                    ['class' => 'btn btn-outline-success btn-lg rounded-pill']
+                ) ?>
             </div>
 
             <?php ActiveForm::end(); ?>
-
-            <div style="color:#999;">
-                You may login with <strong>admin/admin</strong> or <strong>demo/demo</strong>.<br>
-                To modify the username/password, please check out the code <code>app\models\User::$users</code>.
-            </div>
-
         </div>
+
     </div>
 </div>

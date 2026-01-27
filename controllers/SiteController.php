@@ -63,6 +63,12 @@ class SiteController extends Controller
     {
         return $this->render('index');
     }
+//public function actionTestDb()
+//{
+  //  return Yii::$app->db
+    //    ->createCommand('SELECT version()')
+      //  ->queryScalar();
+//}
 
     /**
      * Login action.
@@ -70,52 +76,28 @@ class SiteController extends Controller
      * @return Response|string
      */
     public function actionLogin()
-    {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
-
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        }
-
-        $model->password = '';
-        return $this->render('login', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Logout action.
-     *
-     * @return Response
-     */
-    public function actionLogout()
-    {
-        Yii::$app->user->logout();
-
+{
+    if (!Yii::$app->user->isGuest) {
         return $this->goHome();
     }
 
-    /**
-     * Displays contact page.
-     *
-     * @return Response|string
-     */
-    public function actionContact()
-    {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
-            Yii::$app->session->setFlash('contactFormSubmitted');
+    $model = new LoginForm();
 
-            return $this->refresh();
-        }
-        return $this->render('contact', [
-            'model' => $model,
-        ]);
+    if ($model->load(Yii::$app->request->post()) && $model->login()) {
+        return $this->goBack();
     }
 
+    return $this->render('login', [
+        'model' => $model,
+    ]);
+}
+
+
+public function actionLogout()
+{
+    Yii::$app->user->logout();
+    return $this->goHome();
+}
     /**
      * Displays about page.
      *
@@ -125,4 +107,29 @@ class SiteController extends Controller
     {
         return $this->render('about');
     }
+    public function actionRegister()
+    {
+        $model = new \app\models\RegisterForm();
+
+        if ($model->load(Yii::$app->request->post()) && $model->register()) {
+            Yii::$app->session->setFlash('success', 'Usuario creado correctamente.');
+            return $this->redirect(['site/login']);
+        }
+
+        return $this->render('register', [
+            'model' => $model,
+        ]);
+    }
+    public function actionContact()
+{
+    return $this->render('contact', [
+        'message' => 'Hola Mundo'
+    ]);
+}
+public function actionMantenimiento()
+{
+    return $this->render('mantenimiento');
+}
+
+
 }
