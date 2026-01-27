@@ -46,6 +46,10 @@ $this->title = 'Registro';
 
             <div class="section-title">Información personal</div>
             <?= $form->field($model, 'telefono')->textInput(['placeholder' => 'Ej. 7711234567']) ?>
+            <?= $form->field($model, 'email')->textInput([
+    'placeholder' => 'correo@ejemplo.com',
+    'type' => 'email'
+]) ?>
             <?= $form->field($model, 'codigo_postal')->textInput(['placeholder' => 'Código Postal']) ?>
             <?= $form->field($model, 'calle')->textInput(['placeholder' => 'Calle y número']) ?>
 
