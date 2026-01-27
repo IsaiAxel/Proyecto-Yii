@@ -44,7 +44,10 @@ class RegisterForm extends Model
                 'pattern' => '/^[0-9]{5}$/',
                 'message' => 'Código postal inválido'
             ],
-
+            ['calle', 'match',
+            'pattern' => '/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s\.\-]+$/',
+            'message' => 'La calle solo puede contener letras, números, espacios y . -'
+        ],
             ['username', 'unique',
                 'targetClass' => User::class,
                 'message' => 'Este usuario ya existe'
