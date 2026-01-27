@@ -45,7 +45,13 @@ $this->title = 'Registro';
             <?= $form->field($model, 'password')->passwordInput(['placeholder' => 'Contraseña']) ?>
 
             <div class="section-title">Información personal</div>
-            <?= $form->field($model, 'telefono')->textInput(['placeholder' => 'Ej. 7711234567']) ?>
+            <?= $form->field($model, 'telefono')->textInput([
+    'placeholder' => 'Ej. 7711234567',
+    'maxlength' => 10,
+    'inputmode' => 'numeric',
+    'oninput' => 'this.value = this.value.replace(/[^0-9]/g, "").slice(0,10);'
+]) ?>
+
             <?= $form->field($model, 'email')->textInput([
     'placeholder' => 'correo@ejemplo.com',
     'type' => 'email'
