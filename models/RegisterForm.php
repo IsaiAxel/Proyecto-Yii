@@ -21,14 +21,30 @@ class RegisterForm extends Model
             // Obligatorios
             [['username', 'password', 'telefono', 'codigo_postal', 'calle'], 'required'],
 
+            // ✅ Username SOLO letras
+            ['username', 'match',
+                'pattern' => '/^[a-zA-Z]+$/',
+                'message' => 'El usuario solo puede contener letras (sin números ni caracteres especiales)'
+            ],
+
             ['username', 'string', 'min' => 4, 'max' => 50],
             ['password', 'string', 'min' => 6],
 
             // Validaciones UI
-            ['telefono', 'match', 'pattern' => '/^[0-9]{10}$/', 'message' => 'Teléfono debe tener 10 dígitos'],
-            ['codigo_postal', 'match', 'pattern' => '/^[0-9]{5}$/', 'message' => 'Código postal inválido'],
+            ['telefono', 'match',
+                'pattern' => '/^[0-9]{10}$/',
+                'message' => 'Teléfono debe tener 10 dígitos'
+            ],
 
-            ['username', 'unique', 'targetClass' => User::class, 'message' => 'Este usuario ya existe'],
+            ['codigo_postal', 'match',
+                'pattern' => '/^[0-9]{5}$/',
+                'message' => 'Código postal inválido'
+            ],
+
+            ['username', 'unique',
+                'targetClass' => User::class,
+                'message' => 'Este usuario ya existe'
+            ],
         ];
     }
 
@@ -49,4 +65,3 @@ class RegisterForm extends Model
         return $user->save();
     }
 }
-
