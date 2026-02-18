@@ -44,10 +44,12 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="section-title">Credenciales</div>
 
             <?= $form->field($model, 'username')
-                ->textInput(['placeholder' => 'Usuario']) ?>
+    ->textInput(['placeholder' => 'Nombre'])
+    ->label('Nombre') ?>
 
-            <?= $form->field($model, 'password')
-                ->passwordInput(['placeholder' => 'Contraseña']) ?>
+<?= $form->field($model, 'password')
+    ->passwordInput(['placeholder' => 'Contraseña'])
+    ->label('Contraseña') ?>
 
             <?= $form->field($model, 'rememberMe')->checkbox() ?>
 

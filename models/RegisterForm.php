@@ -54,4 +54,20 @@ class RegisterForm extends Model
             ],
         ];
     }
+    public function register()
+{
+    if (!$this->validate()) {
+        return false;
+    }
+
+    $user = new User();
+    $user->username = $this->username;
+    $user->password_hash = Yii::$app->security->generatePasswordHash($this->password);
+    $user->auth_key = Yii::$app->security->generateRandomString();
+    $user->created_at = date('Y-m-d H:i:s');
+    $user->updated_at = date('Y-m-d H:i:s');
+
+    return $user->save();
+}
+
 }

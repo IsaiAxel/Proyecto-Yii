@@ -1,55 +1,64 @@
 <?php
-
 /** @var yii\web\View $this */
 
-$this->title = 'My Yii Application';
-$this->params['breadcrumbs'][] = 'Inicio';
-
+$this->title = 'Forrajera';
 ?>
+
+<style>
+    .carousel-item img {
+        height: 420px;
+        object-fit: cover;
+        border-radius: 20px;
+    }
+    .hero-text {
+        margin-top: 30px;
+    }
+</style>
+
 <div class="site-index">
 
-    <div class="jumbotron text-center bg-transparent mt-5 mb-5">
-        <h1 class="display-4">Congratulations!</h1>
+    <div class="container mt-5">
 
-        <p class="lead">You have successfully created your Yii-powered application.</p>
+        <!-- 🎞️ Carrusel -->
+        <div id="forrajeraCarousel" class="carousel slide shadow-lg" data-bs-ride="carousel">
+            <div class="carousel-inner">
 
-        <p><a class="btn btn-lg btn-success" href="https://www.yiiframework.com">Get started with Yii</a></p>
-    </div>
+                <div class="carousel-item active">
+                    <img src="<?= Yii::getAlias('@web/img/forrajera/forrajera1.png') ?>" class="d-block w-100" alt="Forraje">
+                </div>
 
-    <div class="body-content">
+                <div class="carousel-item">
+                    <img src="<?= Yii::getAlias('@web/img/forrajera/forraje2.jpg') ?>" class="d-block w-100" alt="Alimento animal">
+                </div>
 
-        <div class="row">
-            <div class="col-lg-4 mb-3">
-                <h2>Heading</h2>
+                <div class="carousel-item">
+                    <img src="<?= Yii::getAlias('@web/img/forrajera/forraje3.jpg') ?>" class="d-block w-100" alt="Campo">
+                </div>
 
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-outline-secondary" href="https://www.yiiframework.com/doc/">Yii Documentation &raquo;</a></p>
             </div>
-            <div class="col-lg-4 mb-3">
-                <h2>Heading</h2>
 
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
+            <button class="carousel-control-prev" type="button" data-bs-target="#forrajeraCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+            </button>
 
-                <p><a class="btn btn-outline-secondary" href="https://www.yiiframework.com/forum/">Yii Forum &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
+            <button class="carousel-control-next" type="button" data-bs-target="#forrajeraCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+            </button>
+        </div>
 
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
+        <!-- 🧾 Texto -->
+        <div class="text-center hero-text">
+            <h1 class="display-5 fw-bold">Administrador de Forrajera</h1>
+            <p class="lead text-muted">
+                Sistema de control y gestión de productos, clientes y ventas
+            </p>
 
-                <p><a class="btn btn-outline-secondary" href="https://www.yiiframework.com/extensions/">Yii Extensions &raquo;</a></p>
-            </div>
+            <a href="<?= Yii::$app->urlManager->createUrl(['site/login']) ?>"
+               class="btn btn-primary btn-lg rounded-pill mt-3">
+                Iniciar sesión
+            </a>
         </div>
 
     </div>
+
 </div>
