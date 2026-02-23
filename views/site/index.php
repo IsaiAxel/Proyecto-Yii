@@ -24,7 +24,7 @@ $this->title = 'Forrajera';
             <div class="carousel-inner">
 
                 <div class="carousel-item active">
-                    <img src="<?= Yii::getAlias('@web/img/forrajera/forrajera1.png') ?>" class="d-block w-100" alt="Forraje">
+                    <img src="<?= Yii::getAlias('@web/img/forrajera/forrajera1.webp') ?>" class="d-block w-100" alt="Forraje">
                 </div>
 
                 <div class="carousel-item">
