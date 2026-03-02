@@ -9,6 +9,7 @@ use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+use app\models\Producto; 
 
 class SiteController extends Controller
 {
@@ -20,14 +21,14 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['logout'],
+                'only' => ['logout', 'home'],
                 'rules' => [
-                    [
-                        'actions' => ['logout'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
+    [
+        'actions' => ['logout', 'home'],
+        'allow' => true,
+        'roles' => ['@'],
+    ],
+],
             ],
             'verbs' => [
                 'class' => VerbFilter::class,
@@ -60,9 +61,9 @@ class SiteController extends Controller
      * @return string
      */
     public function actionIndex()
-    {
-        return $this->render('index');
-    }
+{
+ return $this->render('index');
+}
 //public function actionTestDb()
 //{
   //  return Yii::$app->db
@@ -77,14 +78,14 @@ class SiteController extends Controller
      */
     public function actionLogin()
 {
-    if (!Yii::$app->user->isGuest) {
-        return $this->goHome();
+      if (!Yii::$app->user->isGuest) {
+        return $this->redirect(['site/home']);
     }
 
     $model = new LoginForm();
 
     if ($model->load(Yii::$app->request->post()) && $model->login()) {
-        return $this->goBack();
+        return $this->redirect(['site/home']);
     }
 
     return $this->render('login', [
@@ -131,5 +132,17 @@ public function actionMantenimiento()
     return $this->render('mantenimiento');
 }
 
+public function actionHome()
+{
+    $totalProductos = Producto::find()->count();
+    $stockTotal = Producto::find()->sum('stock');
+    $valorInventario = Producto::find()->sum('precio * stock');
+
+    return $this->render('home', [
+        'totalProductos' => $totalProductos,
+        'stockTotal' => $stockTotal,
+        'valorInventario' => $valorInventario,
+    ]);
+}
 
 }

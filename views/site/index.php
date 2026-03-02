@@ -5,13 +5,48 @@ $this->title = 'Forrajera';
 ?>
 
 <style>
+    body {
+        background: linear-gradient(135deg, #A7FFEB, #B2DFDB);
+    }
+
     .carousel-item img {
         height: 420px;
         object-fit: cover;
         border-radius: 20px;
     }
+
+    .carousel {
+        border-radius: 20px;
+        overflow: hidden;
+    }
+
     .hero-text {
-        margin-top: 30px;
+        margin-top: 40px;
+        padding: 40px;
+        background: rgba(255,255,255,0.8);
+        border-radius: 20px;
+        backdrop-filter: blur(8px);
+    }
+
+    .btn-custom {
+        background-color: #00BFA5;
+        border: none;
+        padding: 12px 35px;
+        font-weight: bold;
+        transition: 0.3s ease;
+    }
+
+    .btn-custom:hover {
+        background-color: #009e88;
+        transform: scale(1.05);
+    }
+
+    h1 {
+        color: #00695C;
+    }
+
+    .lead {
+        color: #004D40;
     }
 </style>
 
@@ -20,11 +55,11 @@ $this->title = 'Forrajera';
     <div class="container mt-5">
 
         <!-- 🎞️ Carrusel -->
-        <div id="forrajeraCarousel" class="carousel slide shadow-lg" data-bs-ride="carousel">
+        <div id="forrajeraCarousel" class="carousel slide shadow-lg mb-5" data-bs-ride="carousel">
             <div class="carousel-inner">
 
                 <div class="carousel-item active">
-                    <img src="<?= Yii::getAlias('@web/img/forrajera/forrajera1.webp') ?>" class="d-block w-100" alt="Forraje">
+                    <img src="<?= Yii::getAlias('@web/img/forrajera/Forraje1.jpg') ?>" class="d-block w-100" alt="Forraje">
                 </div>
 
                 <div class="carousel-item">
@@ -47,14 +82,14 @@ $this->title = 'Forrajera';
         </div>
 
         <!-- 🧾 Texto -->
-        <div class="text-center hero-text">
+        <div class="text-center hero-text shadow-lg">
             <h1 class="display-5 fw-bold">Administrador de Forrajera</h1>
-            <p class="lead text-muted">
+            <p class="lead">
                 Sistema de control y gestión de productos, clientes y ventas
             </p>
 
             <a href="<?= Yii::$app->urlManager->createUrl(['site/login']) ?>"
-               class="btn btn-primary btn-lg rounded-pill mt-3">
+               class="btn btn-custom btn-lg rounded-pill mt-3 shadow">
                 Iniciar sesión
             </a>
         </div>
