@@ -95,6 +95,31 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 
 
 <?php $this->endBody() ?>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  // Reemplaza el confirm nativo de Yii por SweetAlert2
+  document.addEventListener("DOMContentLoaded", function () {
+    if (typeof yii === "undefined") return;
+
+    yii.confirm = function (message, ok, cancel) {
+      Swal.fire({
+        title: "Confirmar acción",
+        text: message,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar",
+        reverseButtons: true
+      }).then(function (result) {
+        if (result.isConfirmed) {
+          ok();
+        } else {
+          cancel && cancel();
+        }
+      });
+    };
+  });
+</script>
 </body>
 </html>
 <?php $this->endPage() ?>

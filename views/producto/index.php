@@ -2,6 +2,7 @@
 
 use yii\grid\GridView;
 use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 
 $this->title = 'Inventario de Productos';
 ?>
@@ -94,7 +95,30 @@ $this->title = 'Inventario de Productos';
                     'class' => 'btn btn-custom rounded-pill shadow'
                 ]) ?>
             </div>
+<?php $form = ActiveForm::begin([
+    'method' => 'get',
+    'action' => ['index'],
+    'options' => ['class' => 'mb-3'],
+]); ?>
 
+<div class="row g-2 align-items-end">
+    <div class="col-md-6">
+        <?= $form->field($searchModel, 'nombre')->textInput([
+            'placeholder' => 'Buscar por nombre...',
+            'class' => 'form-control',
+        ])->label(false) ?>
+    </div>
+
+    <div class="col-md-3">
+        <?= Html::submitButton('🔍 Buscar', ['class' => 'btn btn-custom w-100 rounded-pill shadow']) ?>
+    </div>
+
+    <div class="col-md-3">
+        <?= Html::a('🧹 Limpiar', ['index'], ['class' => 'btn btn-outline-dark w-100 rounded-pill shadow']) ?>
+    </div>
+</div>
+
+<?php ActiveForm::end(); ?>
             <?= GridView::widget([
                 'dataProvider' => $dataProvider,
                 'tableOptions' => ['class' => 'table table-hover align-middle text-center'],

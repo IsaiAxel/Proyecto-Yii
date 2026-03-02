@@ -50,22 +50,16 @@ class ProductoController extends Controller
         ]);
     }
 
-    public function actionIndex()
-    {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Producto::find(),
-            'pagination' => [
-                'pageSize' => 10,
-            ],
-            'sort' => [
-                'defaultOrder' => ['id' => SORT_DESC],
-            ],
-        ]);
+public function actionIndex()
+{
+    $searchModel = new \app\models\ProductoSearch();
+    $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('index', [
-            'dataProvider' => $dataProvider,
-        ]);
-    }
+    return $this->render('index', [
+        'searchModel' => $searchModel,
+        'dataProvider' => $dataProvider,
+    ]);
+}
 
     public function actionUpdate($id)
     {
