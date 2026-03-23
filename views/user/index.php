@@ -3,6 +3,7 @@
 use yii\grid\GridView;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use app\components\PermisoHelper;
 
 $this->title = 'Usuarios';
 $this->params['breadcrumbs'][] = ['label' => 'Seguridad'];

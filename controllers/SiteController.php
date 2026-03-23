@@ -147,4 +147,39 @@ public function actionProfile()
         'user' => Yii::$app->user->identity,
     ]);
 }
+public function actionPrincipal11()
+{
+    return $this->render('principal-module', [
+        'titulo' => 'Principal 1.1',
+        'breadcrumbPadre' => 'Principal 1',
+        'icono' => '📁',
+    ]);
+}
+
+public function actionPrincipal12()
+{
+    return $this->render('principal-module', [
+        'titulo' => 'Principal 1.2',
+        'breadcrumbPadre' => 'Principal 1',
+        'icono' => '📂',
+    ]);
+}
+
+public function actionPrincipal21()
+{
+    return $this->render('principal-module', [
+        'titulo' => 'Principal 2.1',
+        'breadcrumbPadre' => 'Principal 2',
+        'icono' => '🗂️',
+    ]);
+}
+
+public function actionPrincipal22()
+{
+    return $this->render('principal-module', [
+        'titulo' => 'Principal 2.2',
+        'breadcrumbPadre' => 'Principal 2',
+        'icono' => '🗃️',
+    ]);
+}
 }
