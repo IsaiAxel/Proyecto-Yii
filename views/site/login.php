@@ -42,22 +42,13 @@ $this->title = 'Iniciar sesión';
         border: none;
         font-weight: bold;
         transition: 0.3s ease;
+        color: #fff;
     }
 
     .btn-custom:hover {
         background-color: #009e88;
         transform: scale(1.05);
-    }
-
-    .btn-outline-custom {
-        border: 2px solid #00BFA5;
-        color: #00BFA5;
-        font-weight: bold;
-    }
-
-    .btn-outline-custom:hover {
-        background-color: #00BFA5;
-        color: white;
+        color: #fff;
     }
 
     .text-muted {
@@ -97,20 +88,18 @@ $this->title = 'Iniciar sesión';
                     ->label(false) ?>
             </div>
 
-            <div class="d-grid mt-4 gap-2">
+            <div class="d-grid mt-4">
                 <?= Html::submitButton(
                     'Entrar',
                     ['class' => 'btn btn-custom btn-lg rounded-pill shadow']
                 ) ?>
-
-                <?= Html::a(
-                    'Crear una cuenta',
-                    ['site/register'],
-                    ['class' => 'btn btn-outline-custom btn-lg rounded-pill']
-                ) ?>
             </div>
 
             <?php ActiveForm::end(); ?>
+
+            <div class="text-center mt-3 small text-muted">
+                Acceso restringido. Si necesitas una cuenta, contacta al administrador.
+            </div>
 
         </div>
 

@@ -2,6 +2,7 @@
 
 use app\assets\AppAsset;
 use app\widgets\Alert;
+use app\components\PermisoHelper;
 use yii\bootstrap5\Breadcrumbs;
 use yii\bootstrap5\Html;
 use yii\bootstrap5\Nav;
@@ -39,24 +40,99 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
         ]
     ]);
 
-    echo Nav::widget([
-        'options' => ['class' => 'navbar-nav ms-auto'],
+    $items = [];
+
+    $items[] = ['label' => 'Home', 'url' => ['/site/home']];
+
+    // Si quieres conservar Productos por ahora, lo dejamos fijo
+    $items[] = [
+        'label' => 'Productos',
         'items' => [
-            ['label' => 'Home', 'url' => ['/site/home']],
-            [
-                'label' => 'Productos',
-                'items' => [
-                    ['label' => 'Registrar Producto', 'url' => ['/producto/create']],
-                    ['label' => 'Lista de Productos', 'url' => ['/producto/index']],
-                ],
-            ],
-            ['label' => 'Hola Mundo', 'url' => ['/site/contact']],
-            [
-                'label' => 'Cerrar sesión (' . Yii::$app->user->identity->username . ')',
-                'url' => ['/site/logout'],
-                'linkOptions' => ['data-method' => 'post']
-            ]
+            ['label' => 'Registrar Producto', 'url' => ['/producto/create']],
+            ['label' => 'Lista de Productos', 'url' => ['/producto/index']],
         ],
+    ];
+
+    // ===== SEGURIDAD =====
+    $seguridadItems = [];
+
+    if (PermisoHelper::puedeVerModulo('Perfil')) {
+        $seguridadItems[] = ['label' => 'Perfil', 'url' => ['/perfil/index']];
+    }
+
+    if (PermisoHelper::puedeVerModulo('Modulo')) {
+        $seguridadItems[] = ['label' => 'Módulo', 'url' => ['/modulo/index']];
+    }
+
+    if (PermisoHelper::puedeVerModulo('Permisos')) {
+        $seguridadItems[] = ['label' => 'Permisos', 'url' => ['/permisos-perfil/asignar']];
+    }
+
+    if (PermisoHelper::puedeVerModulo('Usuario')) {
+        $seguridadItems[] = ['label' => 'Usuarios', 'url' => ['/user/index']];
+    }
+
+    if (!empty($seguridadItems)) {
+        $items[] = [
+            'label' => 'Seguridad',
+            'items' => $seguridadItems,
+        ];
+    }
+
+    // ===== PRINCIPAL 1 =====
+    $principal1Items = [];
+
+    if (PermisoHelper::puedeVerModulo('Principal 1.1')) {
+        $principal1Items[] = ['label' => 'Principal 1.1', 'url' => ['/site/principal11']];
+    }
+
+    if (PermisoHelper::puedeVerModulo('Principal 1.2')) {
+        $principal1Items[] = ['label' => 'Principal 1.2', 'url' => ['/site/principal12']];
+    }
+
+    if (!empty($principal1Items)) {
+        $items[] = [
+            'label' => 'Principal 1',
+            'items' => $principal1Items,
+        ];
+    }
+
+    // ===== PRINCIPAL 2 =====
+    $principal2Items = [];
+
+    if (PermisoHelper::puedeVerModulo('Principal 2.1')) {
+        $principal2Items[] = ['label' => 'Principal 2.1', 'url' => ['/site/principal21']];
+    }
+
+    if (PermisoHelper::puedeVerModulo('Principal 2.2')) {
+        $principal2Items[] = ['label' => 'Principal 2.2', 'url' => ['/site/principal22']];
+    }
+
+    if (!empty($principal2Items)) {
+        $items[] = [
+            'label' => 'Principal 2',
+            'items' => $principal2Items,
+        ];
+    }
+
+    // ===== PERFIL =====
+    $items[] = [
+        'label' => '👤 Bienvenido, ' . Html::encode(Yii::$app->user->identity->username),
+        'encode' => false,
+        'items' => [
+            ['label' => 'Mi perfil', 'url' => ['/site/profile']],
+            '<div class="dropdown-divider"></div>',
+            [
+                'label' => 'Cerrar sesión',
+                'url' => ['/site/logout'],
+                'linkOptions' => ['data-method' => 'post'],
+            ],
+        ],
+    ];
+
+    echo Nav::widget([
+        'options' => ['class' => 'navbar-nav ms-auto align-items-lg-center'],
+        'items' => $items,
     ]);
 
     NavBar::end();
@@ -97,28 +173,27 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 <?php $this->endBody() ?>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-  // Reemplaza el confirm nativo de Yii por SweetAlert2
-  document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function () {
     if (typeof yii === "undefined") return;
 
     yii.confirm = function (message, ok, cancel) {
-      Swal.fire({
-        title: "Confirmar acción",
-        text: message,
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Sí, eliminar",
-        cancelButtonText: "Cancelar",
-        reverseButtons: true
-      }).then(function (result) {
-        if (result.isConfirmed) {
-          ok();
-        } else {
-          cancel && cancel();
-        }
-      });
+        Swal.fire({
+            title: "Confirmar acción",
+            text: message,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Sí, eliminar",
+            cancelButtonText: "Cancelar",
+            reverseButtons: true
+        }).then(function (result) {
+            if (result.isConfirmed) {
+                ok();
+            } else {
+                cancel && cancel();
+            }
+        });
     };
-  });
+});
 </script>
 </body>
 </html>

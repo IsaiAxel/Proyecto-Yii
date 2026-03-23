@@ -60,22 +60,16 @@ class SiteController extends Controller
      *
      * @return string
      */
-    public function actionIndex()
+public function actionIndex()
 {
- return $this->render('index');
-}
-//public function actionTestDb()
-//{
-  //  return Yii::$app->db
-    //    ->createCommand('SELECT version()')
-      //  ->queryScalar();
-//}
+    // Si ya está logueado, mándalo a tu home interno
+    if (!Yii::$app->user->isGuest) {
+        return $this->redirect(['site/home']); // o producto/index, lo que uses
+    }
 
-    /**
-     * Login action.
-     *
-     * @return Response|string
-     */
+    // Si NO está logueado, muestra login directo
+    return $this->redirect(['site/login']);
+}
     public function actionLogin()
 {
       if (!Yii::$app->user->isGuest) {
@@ -145,4 +139,12 @@ public function actionHome()
     ]);
 }
 
+public function actionProfile()
+{
+    $this->view->title = 'Perfil';
+
+    return $this->render('profile', [
+        'user' => Yii::$app->user->identity,
+    ]);
+}
 }
