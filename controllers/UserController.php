@@ -74,29 +74,35 @@ class UserController extends Controller
         $model->scenario = 'create';
 
         if ($model->load(Yii::$app->request->post())) {
-            $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+           $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
 
-            if ($model->validate()) {
-                if ($model->imageFile) {
-                    $fileName = 'user_' . time() . '_' . uniqid() . '.' . $model->imageFile->extension;
+if ($model->validate()) {
+    if ($model->imageFile) {
+        $fileName = 'user_' . time() . '_' . uniqid() . '.' . $model->imageFile->extension;
 
-                    $uploadDir = Yii::getAlias('@webroot/uploads');
-                    if (!is_dir($uploadDir)) {
-                        mkdir($uploadDir, 0775, true);
-                    }
+        $uploadDir = Yii::getAlias('@webroot/uploads');
 
-                    $uploadPath = $uploadDir . DIRECTORY_SEPARATOR . $fileName;
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
+        }
 
-                    if ($model->imageFile->saveAs($uploadPath)) {
-                        $model->strimagenusuario = $fileName;
-                    }
-                }
+        @chmod($uploadDir, 0777);
 
-                if ($model->save(false)) {
-                    Yii::$app->session->setFlash('success', 'Usuario creado correctamente.');
-                    return $this->redirect(['index']);
-                }
-            }
+        $uploadPath = $uploadDir . DIRECTORY_SEPARATOR . $fileName;
+
+        if ($model->imageFile->saveAs($uploadPath)) {
+            @chmod($uploadPath, 0777);
+            $model->strimagenusuario = $fileName;
+        } else {
+            Yii::$app->session->setFlash('error', 'No se pudo guardar la imagen en el servidor.');
+        }
+    }
+
+    if ($model->save(false)) {
+        Yii::$app->session->setFlash('success', 'Usuario actualizado correctamente.');
+        return $this->redirect(['index']);
+    }
+}
         }
 
         return $this->render('create', [

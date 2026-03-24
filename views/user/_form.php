@@ -244,9 +244,9 @@ use yii\bootstrap5\ActiveForm;
         <?php if (!$model->isNewRecord && !empty($model->strimagenusuario)): ?>
             <div class="image-preview-box">
                 <div class="image-preview-title">Imagen actual</div>
-                <?= Html::img('@web/uploads/' . $model->strimagenusuario, [
-                    'class' => 'image-preview-thumb'
-                ]) ?>
+                <?= Html::img(Yii::getAlias('@web/uploads/' . $model->strimagenusuario), [
+    'class' => 'image-preview-thumb'
+]) ?>
             </div>
         <?php endif; ?>
 
