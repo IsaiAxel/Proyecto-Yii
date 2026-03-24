@@ -96,6 +96,7 @@ class User extends ActiveRecord implements IdentityInterface
                 'tooBig' => 'La imagen no puede pesar más de 2MB.',
                 'wrongExtension' => 'Solo se permiten imágenes PNG o JPG.'
             ],
+            
         ];
     }
 

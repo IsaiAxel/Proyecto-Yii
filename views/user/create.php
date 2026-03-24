@@ -1,9 +1,7 @@
 <?php
 
 $this->title = 'Crear Usuario';
-$this->params['breadcrumbs'][] = ['label' => 'Seguridad'];
-$this->params['breadcrumbs'][] = ['label' => 'Usuario', 'url' => ['index']];
-$this->params['breadcrumbs'][] = 'Crear';
+
 ?>
 
 <div class="container mt-4">

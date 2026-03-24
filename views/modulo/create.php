@@ -1,9 +1,7 @@
 <?php
 
 $this->title = 'Crear Módulo';
-$this->params['breadcrumbs'][] = ['label' => 'Seguridad'];
-$this->params['breadcrumbs'][] = ['label' => 'Módulo', 'url' => ['index']];
-$this->params['breadcrumbs'][] = 'Crear';
+
 ?>
 
 <div class="container mt-4">
