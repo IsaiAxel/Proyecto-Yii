@@ -191,9 +191,9 @@ $this->title = 'Detalle del Usuario';
 
                 <div class="modern-top-actions">
                     <div>
-                        <?= Html::a('← Volver', ['index'], [
-                            'class' => 'btn btn-back-modern'
-                        ]) ?>
+                        <?= Html::img($model->strimagenusuario, [
+    'class' => 'user-avatar-large'
+])?>
                     </div>
                 </div>
 

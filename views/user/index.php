@@ -411,9 +411,9 @@ $this->title = 'Usuarios';
                                 'format' => 'raw',
                                 'value' => function ($model) {
                                     return $model->strimagenusuario
-                                        ? Html::img('@web/uploads/' . $model->strimagenusuario, [
-                                            'class' => 'user-avatar-thumb'
-                                        ])
+                                        ? Html::img($model->strimagenusuario, [
+    'class' => 'user-avatar-thumb'
+])
                                         : '<span class="user-avatar-empty">Sin foto</span>';
                                 }
                             ],

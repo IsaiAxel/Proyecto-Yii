@@ -14,6 +14,7 @@ use yii\web\ForbiddenHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
+use app\components\SupabaseStorage;
 
 class UserController extends Controller
 {
@@ -78,28 +79,25 @@ class UserController extends Controller
 
 if ($model->validate()) {
     if ($model->imageFile) {
-        $fileName = 'user_' . time() . '_' . uniqid() . '.' . $model->imageFile->extension;
+        $publicUrl = SupabaseStorage::upload($model->imageFile, 'users');
 
-        $uploadDir = Yii::getAlias('@webroot/uploads');
-
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0777, true);
-        }
-
-        @chmod($uploadDir, 0777);
-
-        $uploadPath = $uploadDir . DIRECTORY_SEPARATOR . $fileName;
-
-        if ($model->imageFile->saveAs($uploadPath)) {
-            @chmod($uploadPath, 0777);
-            $model->strimagenusuario = $fileName;
+        if ($publicUrl) {
+            $model->strimagenusuario = $publicUrl;
         } else {
-            Yii::$app->session->setFlash('error', 'No se pudo guardar la imagen en el servidor.');
+            Yii::$app->session->setFlash('error', 'No se pudo subir la imagen a Supabase Storage.');
+            return $this->render('create', [
+                'model' => $model,
+                'perfiles' => ArrayHelper::map(
+                    Perfil::find()->asArray()->all(),
+                    'id',
+                    'strnombreperfil'
+                ),
+            ]);
         }
     }
 
     if ($model->save(false)) {
-        Yii::$app->session->setFlash('success', 'Usuario actualizado correctamente.');
+        Yii::$app->session->setFlash('success', 'Usuario creado correctamente.');
         return $this->redirect(['index']);
     }
 }
@@ -125,29 +123,32 @@ if ($model->validate()) {
         $model->scenario = 'update';
 
         if ($model->load(Yii::$app->request->post())) {
-            $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+           $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
 
-            if ($model->validate()) {
-                if ($model->imageFile) {
-                    $fileName = 'user_' . time() . '_' . uniqid() . '.' . $model->imageFile->extension;
+if ($model->validate()) {
+    if ($model->imageFile) {
+        $publicUrl = SupabaseStorage::upload($model->imageFile, 'users');
 
-                    $uploadDir = Yii::getAlias('@webroot/uploads');
-                    if (!is_dir($uploadDir)) {
-                        mkdir($uploadDir, 0775, true);
-                    }
+        if ($publicUrl) {
+            $model->strimagenusuario = $publicUrl;
+        } else {
+            Yii::$app->session->setFlash('error', 'No se pudo subir la imagen a Supabase Storage.');
+            return $this->render('update', [
+                'model' => $model,
+                'perfiles' => ArrayHelper::map(
+                    Perfil::find()->asArray()->all(),
+                    'id',
+                    'strnombreperfil'
+                ),
+            ]);
+        }
+    }
 
-                    $uploadPath = $uploadDir . DIRECTORY_SEPARATOR . $fileName;
-
-                    if ($model->imageFile->saveAs($uploadPath)) {
-                        $model->strimagenusuario = $fileName;
-                    }
-                }
-
-                if ($model->save(false)) {
-                    Yii::$app->session->setFlash('success', 'Usuario actualizado correctamente.');
-                    return $this->redirect(['index']);
-                }
-            }
+    if ($model->save(false)) {
+        Yii::$app->session->setFlash('success', 'Usuario actualizado correctamente.');
+        return $this->redirect(['index']);
+    }
+}
         }
 
         return $this->render('update', [

@@ -7,7 +7,7 @@ class SupabaseStorage
     $supabaseUrl = 'https://ldqcpnoijpfptugiilut.supabase.co';
     $apiKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxkcWNwbm9panBmcHR1Z2lpbHV0Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2ODgyNzk0OCwiZXhwIjoyMDg0NDAzOTQ4fQ.8kN0O8RzbhbKoAksPe6Ykji8cz3hfo73YwKUnYxo984'; // 🔴 usa la correcta
 
-    $bucket = 'productos';
+    $bucket = 'usuarios';
     $fileName = uniqid() . '.' . $file->extension;
 
     $url = "$supabaseUrl/storage/v1/object/$bucket/$fileName";
