@@ -16,10 +16,7 @@ $this->params['breadcrumbs'][] = 'Detalle';
                 <h2 class="text-success fw-bold mb-0">🔎 Detalle del Perfil</h2>
 
                 <div class="d-flex gap-2">
-                    <?= Html::a('Editar', ['update', 'id' => $model->id], [
-                        'class' => 'btn btn-warning rounded-pill px-4'
-                    ]) ?>
-
+                   
                     <?= Html::a('Volver', ['index'], [
                         'class' => 'btn btn-outline-secondary rounded-pill px-4'
                     ]) ?>

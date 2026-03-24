@@ -3,6 +3,12 @@
 use yii\grid\GridView;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use yii\web\ForbiddenHttpException;
+use app\components\PermisoHelper;
+
+if (!PermisoHelper::puedeVerModulo('Modulo')) {
+    throw new ForbiddenHttpException('No tienes permiso para acceder a este módulo.');
+}
 
 $this->title = 'Módulos';
 $this->params['breadcrumbs'][] = ['label' => 'Seguridad'];
@@ -113,9 +119,11 @@ $this->params['breadcrumbs'][] = 'Módulo';
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h2 class="module-title">🧩 Módulos</h2>
 
-                    <?= Html::a('➕ Nuevo Módulo', ['create'], [
-                        'class' => 'btn btn-custom rounded-pill shadow'
-                    ]) ?>
+                    <?php if (PermisoHelper::puedeAgregar('Modulo')): ?>
+                        <?= Html::a('➕ Nuevo Módulo', ['create'], [
+                            'class' => 'btn btn-custom rounded-pill shadow'
+                        ]) ?>
+                    <?php endif; ?>
                 </div>
 
                 <?php $form = ActiveForm::begin([
@@ -159,7 +167,7 @@ $this->params['breadcrumbs'][] = 'Módulo';
                         'lastPageLabel' => '»',
                     ],
                     'columns' => [
-                        'id',
+                        
                         [
                             'attribute' => 'strnombremodulo',
                             'contentOptions' => ['class' => 'fw-semibold text-success']
@@ -167,19 +175,34 @@ $this->params['breadcrumbs'][] = 'Módulo';
                         [
                             'class' => 'yii\grid\ActionColumn',
                             'header' => 'Acciones',
-                            'template' => '{view} {update} {delete}',
+                            'template' =>
+                                (PermisoHelper::puedeDetalle('Modulo') ? '{view} ' : '') .
+                                (PermisoHelper::puedeEditar('Modulo') ? '{update} ' : '') .
+                                (PermisoHelper::puedeEliminar('Modulo') ? '{delete}' : ''),
                             'buttons' => [
                                 'view' => function ($url, $model) {
+                                    if (!PermisoHelper::puedeDetalle('Modulo')) {
+                                        return '';
+                                    }
+
                                     return Html::a('👁️', ['view', 'id' => $model->id], [
                                         'class' => 'btn btn-view btn-action me-1'
                                     ]);
                                 },
                                 'update' => function ($url, $model) {
+                                    if (!PermisoHelper::puedeEditar('Modulo')) {
+                                        return '';
+                                    }
+
                                     return Html::a('✏️', ['update', 'id' => $model->id], [
                                         'class' => 'btn btn-update btn-action me-1'
                                     ]);
                                 },
                                 'delete' => function ($url, $model) {
+                                    if (!PermisoHelper::puedeEliminar('Modulo')) {
+                                        return '';
+                                    }
+
                                     return Html::a('🗑️', ['delete', 'id' => $model->id], [
                                         'class' => 'btn btn-delete btn-action',
                                         'data' => [

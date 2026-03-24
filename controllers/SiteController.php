@@ -5,30 +5,30 @@ namespace app\controllers;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
+use yii\web\ForbiddenHttpException;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
-use app\models\Producto; 
+use app\models\Producto;
+use app\models\User;
+use app\components\PermisoHelper;
 
 class SiteController extends Controller
 {
-    /**
-     * {@inheritdoc}
-     */
     public function behaviors()
     {
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['logout', 'home'],
+                'only' => ['logout', 'home', 'profile', 'principal11', 'principal12', 'principal21', 'principal22'],
                 'rules' => [
-    [
-        'actions' => ['logout', 'home'],
-        'allow' => true,
-        'roles' => ['@'],
-    ],
-],
+                    [
+                        'actions' => ['logout', 'home', 'profile', 'principal11', 'principal12', 'principal21', 'principal22'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
             ],
             'verbs' => [
                 'class' => VerbFilter::class,
@@ -39,9 +39,6 @@ class SiteController extends Controller
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function actions()
     {
         return [
@@ -55,24 +52,18 @@ class SiteController extends Controller
         ];
     }
 
-    /**
-     * Displays homepage.
-     *
-     * @return string
-     */
-public function actionIndex()
-{
-    // Si ya está logueado, mándalo a tu home interno
-    if (!Yii::$app->user->isGuest) {
-        return $this->redirect(['site/home']); // o producto/index, lo que uses
+    public function actionIndex()
+    {
+        if (!Yii::$app->user->isGuest) {
+            return $this->redirect(['site/home']);
+        }
+
+        return $this->redirect(['site/login']);
     }
 
-    // Si NO está logueado, muestra login directo
-    return $this->redirect(['site/login']);
-}
-    public function actionLogin()
+public function actionLogin()
 {
-      if (!Yii::$app->user->isGuest) {
+    if (!Yii::$app->user->isGuest) {
         return $this->redirect(['site/home']);
     }
 
@@ -87,21 +78,17 @@ public function actionIndex()
     ]);
 }
 
+    public function actionLogout()
+    {
+        Yii::$app->user->logout();
+        return $this->goHome();
+    }
 
-public function actionLogout()
-{
-    Yii::$app->user->logout();
-    return $this->goHome();
-}
-    /**
-     * Displays about page.
-     *
-     * @return string
-     */
     public function actionAbout()
     {
         return $this->render('about');
     }
+
     public function actionRegister()
     {
         $model = new \app\models\RegisterForm();
@@ -115,71 +102,93 @@ public function actionLogout()
             'model' => $model,
         ]);
     }
+
     public function actionContact()
-{
-    return $this->render('contact', [
-        'message' => 'Hola Mundo'
-    ]);
-}
-public function actionMantenimiento()
-{
-    return $this->render('mantenimiento');
-}
+    {
+        return $this->render('contact', [
+            'message' => 'Hola Mundo'
+        ]);
+    }
 
-public function actionHome()
-{
-    $totalProductos = Producto::find()->count();
-    $stockTotal = Producto::find()->sum('stock');
-    $valorInventario = Producto::find()->sum('precio * stock');
+    public function actionMantenimiento()
+    {
+        return $this->render('mantenimiento');
+    }
 
-    return $this->render('home', [
-        'totalProductos' => $totalProductos,
-        'stockTotal' => $stockTotal,
-        'valorInventario' => $valorInventario,
-    ]);
-}
+    public function actionHome()
+    {
+        $totalProductos = Producto::find()->count();
+        $stockTotal = Producto::find()->sum('stock');
+        $valorInventario = Producto::find()->sum('precio * stock');
 
-public function actionProfile()
-{
-    $this->view->title = 'Perfil';
+        return $this->render('home', [
+            'totalProductos' => $totalProductos,
+            'stockTotal' => $stockTotal,
+            'valorInventario' => $valorInventario,
+        ]);
+    }
 
-    return $this->render('profile', [
-        'user' => Yii::$app->user->identity,
-    ]);
-}
-public function actionPrincipal11()
-{
-    return $this->render('principal-module', [
-        'titulo' => 'Principal 1.1',
-        'breadcrumbPadre' => 'Principal 1',
-        'icono' => '📁',
-    ]);
-}
+    public function actionProfile()
+    {
+        $user = User::find()
+            ->with('perfil')
+            ->where(['id' => Yii::$app->user->id])
+            ->one();
 
-public function actionPrincipal12()
-{
-    return $this->render('principal-module', [
-        'titulo' => 'Principal 1.2',
-        'breadcrumbPadre' => 'Principal 1',
-        'icono' => '📂',
-    ]);
-}
+        return $this->render('profile', [
+            'user' => $user,
+        ]);
+    }
 
-public function actionPrincipal21()
-{
-    return $this->render('principal-module', [
-        'titulo' => 'Principal 2.1',
-        'breadcrumbPadre' => 'Principal 2',
-        'icono' => '🗂️',
-    ]);
-}
+    public function actionPrincipal11()
+    {
+        if (!PermisoHelper::puedeVerModulo('Principal 1.1')) {
+            throw new ForbiddenHttpException('No tienes permiso para acceder a este módulo.');
+        }
 
-public function actionPrincipal22()
-{
-    return $this->render('principal-module', [
-        'titulo' => 'Principal 2.2',
-        'breadcrumbPadre' => 'Principal 2',
-        'icono' => '🗃️',
-    ]);
-}
+        return $this->render('principal-module', [
+            'titulo' => 'Principal 1.1',
+            'breadcrumbPadre' => 'Principal 1',
+            'icono' => '📁',
+        ]);
+    }
+
+    public function actionPrincipal12()
+    {
+        if (!PermisoHelper::puedeVerModulo('Principal 1.2')) {
+            throw new ForbiddenHttpException('No tienes permiso para acceder a este módulo.');
+        }
+
+        return $this->render('principal-module', [
+            'titulo' => 'Principal 1.2',
+            'breadcrumbPadre' => 'Principal 1',
+            'icono' => '📂',
+        ]);
+    }
+
+    public function actionPrincipal21()
+    {
+        if (!PermisoHelper::puedeVerModulo('Principal 2.1')) {
+            throw new ForbiddenHttpException('No tienes permiso para acceder a este módulo.');
+        }
+
+        return $this->render('principal-module', [
+            'titulo' => 'Principal 2.1',
+            'breadcrumbPadre' => 'Principal 2',
+            'icono' => '🗂️',
+        ]);
+    }
+
+    public function actionPrincipal22()
+    {
+        if (!PermisoHelper::puedeVerModulo('Principal 2.2')) {
+            throw new ForbiddenHttpException('No tienes permiso para acceder a este módulo.');
+        }
+
+        return $this->render('principal-module', [
+            'titulo' => 'Principal 2.2',
+            'breadcrumbPadre' => 'Principal 2',
+            'icono' => '🗃️',
+        ]);
+    }
 }

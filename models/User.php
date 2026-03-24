@@ -30,9 +30,9 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     public static function findByUsername($username)
-    {
-        return static::findOne(['username' => $username]);
-    }
+{
+    return static::findOne(['username' => $username]);
+}
 
     public function getId()
     {
@@ -52,9 +52,9 @@ class User extends ActiveRecord implements IdentityInterface
     /* ===== Password ===== */
 
     public function validatePassword($password)
-    {
-        return Yii::$app->security->validatePassword($password, $this->password_hash);
-    }
+{
+    return Yii::$app->security->validatePassword($password, $this->password_hash);
+}
 
     /* ===== Relaciones ===== */
 

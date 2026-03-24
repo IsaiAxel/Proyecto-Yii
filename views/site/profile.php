@@ -41,6 +41,13 @@ $this->params['breadcrumbs'][] = 'Mi Perfil';
         align-items: center;
         justify-content: center;
         margin-bottom: 20px;
+        overflow: hidden;
+    }
+
+    .profile-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
     }
 
     .info-box {
@@ -95,14 +102,21 @@ $this->params['breadcrumbs'][] = 'Mi Perfil';
                     </div>
 
                     <div class="mt-3 mt-md-0">
-                        <?= Html::a('Editar perfil', ['site/profile-edit'], ['class' => 'btn btn-profile shadow']) ?>
+                        <button class="btn btn-profile shadow" disabled>Editar perfil</button>
                     </div>
                 </div>
 
                 <div class="text-center text-md-start mb-4">
                     <div class="profile-avatar">
-                        <?= strtoupper(substr($user->username ?? 'U', 0, 1)) ?>
-                    </div>
+    <?php if (!empty($user->strimagenusuario)): ?>
+        <?= Html::img(
+            yii\helpers\Url::to('@web/uploads/' . $user->strimagenusuario),
+            ['alt' => 'Foto de perfil']
+        ) ?>
+    <?php else: ?>
+        <?= strtoupper(substr($user->username ?? 'U', 0, 1)) ?>
+    <?php endif; ?>
+</div>
                 </div>
 
                 <div class="row g-4">
@@ -116,28 +130,30 @@ $this->params['breadcrumbs'][] = 'Mi Perfil';
                     <div class="col-md-6">
                         <div class="info-box">
                             <div class="info-label">Correo electrónico</div>
-                            <div class="info-value"><?= Html::encode($user->email ?? 'No registrado') ?></div>
+                            <div class="info-value"><?= Html::encode($user->strcorreo ?? 'No registrado') ?></div>
                         </div>
                     </div>
 
                     <div class="col-md-6">
                         <div class="info-box">
                             <div class="info-label">Teléfono</div>
-                            <div class="info-value"><?= Html::encode($user->telefono ?? 'No registrado') ?></div>
+                            <div class="info-value"><?= Html::encode($user->strnumerocelular ?? 'No registrado') ?></div>
                         </div>
                     </div>
 
                     <div class="col-md-6">
                         <div class="info-box">
-                            <div class="info-label">Código postal</div>
-                            <div class="info-value"><?= Html::encode($user->codigo_postal ?? 'No registrado') ?></div>
+                            <div class="info-label">Estado</div>
+                            <div class="info-value"><?= ($user->idestadousuario ?? 0) == 1 ? 'Activo' : 'Inactivo' ?></div>
                         </div>
                     </div>
 
                     <div class="col-md-12">
                         <div class="info-box">
-                            <div class="info-label">Calle</div>
-                            <div class="info-value"><?= Html::encode($user->calle ?? 'No registrada') ?></div>
+                            <div class="info-label">Perfil asignado</div>
+                            <div class="info-value">
+                                <?= isset($user->perfil) && $user->perfil ? Html::encode($user->perfil->strnombreperfil) : 'No asignado' ?>
+                            </div>
                         </div>
                     </div>
                 </div>

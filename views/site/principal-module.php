@@ -1,10 +1,16 @@
 <?php
 
 use yii\helpers\Html;
+use yii\web\ForbiddenHttpException;
+use app\components\PermisoHelper;
 
 /** @var string $titulo */
 /** @var string $breadcrumbPadre */
 /** @var string $icono */
+
+if (!PermisoHelper::puedeVerModulo($titulo)) {
+    throw new ForbiddenHttpException('No tienes permiso para acceder a este módulo.');
+}
 
 $this->title = $titulo;
 $this->params['breadcrumbs'][] = ['label' => $breadcrumbPadre];
@@ -121,9 +127,17 @@ $datosDemo = [
                     </div>
 
                     <div class="d-flex flex-wrap gap-2">
-                        <button class="btn btn-main shadow">➕ Nuevo</button>
-                        <button class="btn btn-outline-secondary btn-outline-main shadow-sm">🔍 Consultar</button>
-                        <button class="btn btn-outline-secondary btn-outline-main shadow-sm">📄 Detalle</button>
+                        <?php if (PermisoHelper::puedeAgregar($titulo)): ?>
+                            <button class="btn btn-main shadow">➕ Nuevo</button>
+                        <?php endif; ?>
+
+                        <?php if (PermisoHelper::puedeVerModulo($titulo)): ?>
+                            <button class="btn btn-outline-secondary btn-outline-main shadow-sm">🔍 Consultar</button>
+                        <?php endif; ?>
+
+                        <?php if (PermisoHelper::puedeDetalle($titulo)): ?>
+                            <button class="btn btn-outline-secondary btn-outline-main shadow-sm">📄 Detalle</button>
+                        <?php endif; ?>
                     </div>
                 </div>
 
@@ -131,7 +145,7 @@ $datosDemo = [
                     <table class="table table-hover align-middle text-center mb-0">
                         <thead>
                             <tr>
-                                <th>ID</th>
+                               
                                 <th>Nombre</th>
                                 <th>Descripción</th>
                                 <th>Estado</th>
@@ -146,9 +160,17 @@ $datosDemo = [
                                     <td><?= Html::encode($fila['descripcion']) ?></td>
                                     <td><?= Html::encode($fila['estado']) ?></td>
                                     <td>
-                                        <button class="btn btn-info text-white action-btn">👁️</button>
-                                        <button class="btn btn-warning action-btn">✏️</button>
-                                        <button class="btn btn-danger action-btn">🗑️</button>
+                                        <?php if (PermisoHelper::puedeDetalle($titulo)): ?>
+                                            <button class="btn btn-info text-white action-btn">👁️</button>
+                                        <?php endif; ?>
+
+                                        <?php if (PermisoHelper::puedeEditar($titulo)): ?>
+                                            <button class="btn btn-warning action-btn">✏️</button>
+                                        <?php endif; ?>
+
+                                        <?php if (PermisoHelper::puedeEliminar($titulo)): ?>
+                                            <button class="btn btn-danger action-btn">🗑️</button>
+                                        <?php endif; ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -156,7 +178,13 @@ $datosDemo = [
                     </table>
                 </div>
 
-                
+                <div class="info-panel">
+                    <h5 class="fw-bold mb-2">Información del módulo</h5>
+                    <p class="mb-0">
+                        Esta pantalla cumple con el requerimiento de mostrar botones y estructura visual de operaciones CRUD,
+                        pero sin conexión a base de datos. Los botones visibles dependen de los permisos asignados al perfil.
+                    </p>
+                </div>
             </div>
 
         </div>

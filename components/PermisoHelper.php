@@ -3,7 +3,6 @@
 namespace app\components;
 
 use Yii;
-use app\models\User;
 use app\models\Modulo;
 use app\models\PermisosPerfil;
 
@@ -11,32 +10,7 @@ class PermisoHelper
 {
     public static function puedeVerModulo($nombreModulo)
     {
-        if (Yii::$app->user->isGuest) {
-            return false;
-        }
-
-        $user = Yii::$app->user->identity;
-
-        if (!$user || empty($user->idperfil)) {
-            return false;
-        }
-
-        $modulo = Modulo::find()
-            ->where(['strnombremodulo' => $nombreModulo])
-            ->one();
-
-        if (!$modulo) {
-            return false;
-        }
-
-        $permiso = PermisosPerfil::find()
-            ->where([
-                'idperfil' => $user->idperfil,
-                'idmodulo' => $modulo->id,
-            ])
-            ->one();
-
-        return $permiso && (int)$permiso->bitconsulta === 1;
+        return self::tienePermiso($nombreModulo, 'bitconsulta');
     }
 
     public static function puedeAgregar($nombreModulo)
@@ -86,6 +60,6 @@ class PermisoHelper
             ])
             ->one();
 
-        return $permiso && isset($permiso->$campo) && (int)$permiso->$campo === 1;
+        return $permiso && (int)$permiso->$campo === 1;
     }
 }

@@ -5,8 +5,10 @@ namespace app\controllers;
 use Yii;
 use app\models\Modulo;
 use app\models\ModuloSearch;
+use app\components\PermisoHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\ForbiddenHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 
@@ -35,6 +37,10 @@ class ModuloController extends Controller
 
     public function actionIndex()
     {
+        if (!PermisoHelper::puedeVerModulo('Modulo')) {
+            throw new ForbiddenHttpException('No tienes permiso para acceder a este módulo.');
+        }
+
         $searchModel = new ModuloSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -46,6 +52,10 @@ class ModuloController extends Controller
 
     public function actionView($id)
     {
+        if (!PermisoHelper::puedeDetalle('Modulo')) {
+            throw new ForbiddenHttpException('No tienes permiso para ver el detalle.');
+        }
+
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
@@ -53,6 +63,10 @@ class ModuloController extends Controller
 
     public function actionCreate()
     {
+        if (!PermisoHelper::puedeAgregar('Modulo')) {
+            throw new ForbiddenHttpException('No tienes permiso para crear módulos.');
+        }
+
         $model = new Modulo();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -67,6 +81,10 @@ class ModuloController extends Controller
 
     public function actionUpdate($id)
     {
+        if (!PermisoHelper::puedeEditar('Modulo')) {
+            throw new ForbiddenHttpException('No tienes permiso para editar módulos.');
+        }
+
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -81,6 +99,10 @@ class ModuloController extends Controller
 
     public function actionDelete($id)
     {
+        if (!PermisoHelper::puedeEliminar('Modulo')) {
+            throw new ForbiddenHttpException('No tienes permiso para eliminar módulos.');
+        }
+
         $this->findModel($id)->delete();
         Yii::$app->session->setFlash('success', 'Módulo eliminado correctamente.');
         return $this->redirect(['index']);

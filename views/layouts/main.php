@@ -44,15 +44,6 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 
     $items[] = ['label' => 'Home', 'url' => ['/site/home']];
 
-    // Si quieres conservar Productos por ahora, lo dejamos fijo
-    $items[] = [
-        'label' => 'Productos',
-        'items' => [
-            ['label' => 'Registrar Producto', 'url' => ['/producto/create']],
-            ['label' => 'Lista de Productos', 'url' => ['/producto/index']],
-        ],
-    ];
-
     // ===== SEGURIDAD =====
     $seguridadItems = [];
 

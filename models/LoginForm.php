@@ -6,14 +6,12 @@ use Yii;
 use yii\base\Model;
 use himiklab\yii2\recaptcha\ReCaptchaValidator2;
 
-
 class LoginForm extends Model
 {
     public $username;
     public $password;
     public $rememberMe = true;
     public $reCaptcha;
-
 
     private $_user;
 
@@ -27,13 +25,39 @@ class LoginForm extends Model
         ];
     }
 
+    public function attributeLabels()
+    {
+        return [
+            'username' => 'Usuario',
+            'password' => 'Contraseña',
+            'rememberMe' => 'Recordarme',
+            'reCaptcha' => 'Verificación',
+        ];
+    }
+
     public function validatePassword($attribute)
     {
-        if (!$this->hasErrors()) {
-            $user = $this->getUser();
-            if (!$user || !$user->validatePassword($this->password)) {
-                $this->addError($attribute, 'Usuario o contraseña incorrectos.');
-            }
+        if ($this->hasErrors()) {
+            return;
+        }
+
+        $user = $this->getUser();
+
+        // Usuario no existe
+        if (!$user) {
+            $this->addError($attribute, 'Usuario o contraseña incorrectos.');
+            return;
+        }
+
+        // Usuario inactivo
+        if ((int)$user->idestadousuario !== 1) {
+            $this->addError('username', 'El usuario está inactivo. Contacta al administrador.');
+            return;
+        }
+
+        // Contraseña incorrecta
+        if (!$user->validatePassword($this->password)) {
+            $this->addError($attribute, 'Usuario o contraseña incorrectos.');
         }
     }
 
@@ -45,6 +69,7 @@ class LoginForm extends Model
                 $this->rememberMe ? 3600 * 24 * 30 : 0
             );
         }
+
         return false;
     }
 
@@ -53,7 +78,7 @@ class LoginForm extends Model
         if ($this->_user === null) {
             $this->_user = User::findByUsername($this->username);
         }
+
         return $this->_user;
     }
-    
 }

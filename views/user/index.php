@@ -3,7 +3,12 @@
 use yii\grid\GridView;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use yii\web\ForbiddenHttpException;
 use app\components\PermisoHelper;
+
+if (!PermisoHelper::puedeVerModulo('Usuario')) {
+    throw new ForbiddenHttpException('No tienes permiso para acceder a este módulo.');
+}
 
 $this->title = 'Usuarios';
 $this->params['breadcrumbs'][] = ['label' => 'Seguridad'];
@@ -114,9 +119,11 @@ $this->params['breadcrumbs'][] = 'Usuario';
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h2 class="module-title">👤 Usuarios</h2>
 
-                    <?= Html::a('➕ Nuevo Usuario', ['create'], [
-                        'class' => 'btn btn-custom rounded-pill shadow'
-                    ]) ?>
+                    <?php if (PermisoHelper::puedeAgregar('Usuario')): ?>
+                        <?= Html::a('➕ Nuevo Usuario', ['create'], [
+                            'class' => 'btn btn-custom rounded-pill shadow'
+                        ]) ?>
+                    <?php endif; ?>
                 </div>
 
                 <?php $form = ActiveForm::begin([
@@ -167,7 +174,7 @@ $this->params['breadcrumbs'][] = 'Usuario';
                         'lastPageLabel' => '»',
                     ],
                     'columns' => [
-                        'id',
+                        
                         [
                             'label' => 'Imagen',
                             'format' => 'html',
@@ -198,19 +205,34 @@ $this->params['breadcrumbs'][] = 'Usuario';
                         [
                             'class' => 'yii\grid\ActionColumn',
                             'header' => 'Acciones',
-                            'template' => '{view} {update} {delete}',
+                            'template' =>
+                                (PermisoHelper::puedeDetalle('Usuario') ? '{view} ' : '') .
+                                (PermisoHelper::puedeEditar('Usuario') ? '{update} ' : '') .
+                                (PermisoHelper::puedeEliminar('Usuario') ? '{delete}' : ''),
                             'buttons' => [
                                 'view' => function ($url, $model) {
+                                    if (!PermisoHelper::puedeDetalle('Usuario')) {
+                                        return '';
+                                    }
+
                                     return Html::a('👁️', ['view', 'id' => $model->id], [
                                         'class' => 'btn btn-view btn-action me-1'
                                     ]);
                                 },
                                 'update' => function ($url, $model) {
+                                    if (!PermisoHelper::puedeEditar('Usuario')) {
+                                        return '';
+                                    }
+
                                     return Html::a('✏️', ['update', 'id' => $model->id], [
                                         'class' => 'btn btn-update btn-action me-1'
                                     ]);
                                 },
                                 'delete' => function ($url, $model) {
+                                    if (!PermisoHelper::puedeEliminar('Usuario')) {
+                                        return '';
+                                    }
+
                                     return Html::a('🗑️', ['delete', 'id' => $model->id], [
                                         'class' => 'btn btn-delete btn-action',
                                         'data' => [
