@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 
 $this->title = 'Mi Perfil';
-$this->params['breadcrumbs'][] = 'Mi Perfil';
+
 ?>
 
 <style>
@@ -99,10 +99,6 @@ $this->params['breadcrumbs'][] = 'Mi Perfil';
                         <p class="profile-subtitle mb-0">
                             Consulta la información de tu cuenta dentro del sistema.
                         </p>
-                    </div>
-
-                    <div class="mt-3 mt-md-0">
-                        <button class="btn btn-profile shadow" disabled>Editar perfil</button>
                     </div>
                 </div>
 
