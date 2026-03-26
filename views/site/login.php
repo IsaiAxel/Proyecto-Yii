@@ -78,10 +78,6 @@ $this->title = 'Iniciar sesión';
                 ->passwordInput(['placeholder' => 'Contraseña'])
                 ->label(false) ?>
 
-            <?= $form->field($model, 'rememberMe')->checkbox([
-                'label' => 'Recordarme'
-            ]) ?>
-
             <div class="mt-3">
                 <?= $form->field($model, 'reCaptcha')
                     ->widget(ReCaptcha2::class)

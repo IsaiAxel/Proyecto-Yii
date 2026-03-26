@@ -10,7 +10,6 @@ class LoginForm extends Model
 {
     public $username;
     public $password;
-    public $rememberMe = true;
     public $reCaptcha;
 
     private $_user;
@@ -19,7 +18,6 @@ class LoginForm extends Model
     {
         return [
             [['username', 'password'], 'required'],
-            ['rememberMe', 'boolean'],
             ['password', 'validatePassword'],
             ['reCaptcha', ReCaptchaValidator2::class, 'uncheckedMessage' => 'Confirma que no eres un robot.'],
         ];
@@ -30,7 +28,6 @@ class LoginForm extends Model
         return [
             'username' => 'Usuario',
             'password' => 'Contraseña',
-            'rememberMe' => 'Recordarme',
             'reCaptcha' => 'Verificación',
         ];
     }
@@ -43,19 +40,16 @@ class LoginForm extends Model
 
         $user = $this->getUser();
 
-        // Usuario no existe
         if (!$user) {
             $this->addError($attribute, 'Usuario o contraseña incorrectos.');
             return;
         }
 
-        // Usuario inactivo
         if ((int)$user->idestadousuario !== 1) {
             $this->addError('username', 'El usuario está inactivo. Contacta al administrador.');
             return;
         }
 
-        // Contraseña incorrecta
         if (!$user->validatePassword($this->password)) {
             $this->addError($attribute, 'Usuario o contraseña incorrectos.');
         }
@@ -64,10 +58,7 @@ class LoginForm extends Model
     public function login()
     {
         if ($this->validate()) {
-            return Yii::$app->user->login(
-                $this->getUser(),
-                $this->rememberMe ? 3600 * 24 * 30 : 0
-            );
+            return Yii::$app->user->login($this->getUser());
         }
 
         return false;
